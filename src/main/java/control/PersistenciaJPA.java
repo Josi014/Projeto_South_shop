@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package control;
+
 /**
  *
  * @author Josieli
@@ -120,4 +121,14 @@ public class PersistenciaJPA implements InterfaceBD {
             return new ArrayList<>();
         }
     }
+
+    public Usuario buscarUsuarioPorEmailESenha(String email, String senha) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Usuario> query = em.createQuery(
+                "SELECT u FROM Usuario u WHERE u.email = :email AND u.senha = :senha", Usuario.class);
+        query.setParameter("email", email);
+        query.setParameter("senha", senha);
+        return query.getSingleResult();
+    }
+
 }

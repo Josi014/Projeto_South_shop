@@ -9,5 +9,5 @@ package model;
  * @author Josieli
  */
 public enum Tipo {
-    ADMIN, CLIENTE
+    ADM, CLIENTE
 }
