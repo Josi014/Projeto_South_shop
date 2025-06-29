@@ -116,7 +116,7 @@ public class LoginJF extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Tipo de usuário inválido.");
             }
-            this.dispose(); 
+            this.dispose();             
         } else {
             JOptionPane.showMessageDialog(this, "Usuário ou senha incorretos.");
         }

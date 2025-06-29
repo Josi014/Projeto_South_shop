@@ -24,7 +24,7 @@ import javax.persistence.Table;
  * @author Josieli
  */
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Pedido {
 
     @Id

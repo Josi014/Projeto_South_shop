@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,7 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "product")
-public class Produto {
+public class Produto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +31,7 @@ public class Produto {
     private String nome;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "prod_category", nullable = false, length = 50)
+    @Column(name = "prod_category", nullable = false)
     private Categoria categoria;
 
     @Column(name = "prod_description", length = 500)
@@ -39,10 +40,21 @@ public class Produto {
     @Column(name = "prod_price", nullable = false)
     private double preco;
 
+    @Column(name = "prod_code", nullable = false, unique = true)
+    private int codigo;
+
     @Column(name = "prod_stock", nullable = false)
     private int quantidadeEstoque;
 
     public Produto() {
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     public int getId() {

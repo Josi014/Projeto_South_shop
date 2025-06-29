@@ -4,18 +4,63 @@
  */
 package view;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+import model.Tipo;
+import model.Usuario;
+
 /**
  *
- * @author Usuário
+ * @author Josieli
  */
-public class CadastroUsuarioClienteJF extends javax.swing.JDialog {
+public class CadastroUsuarioJF extends javax.swing.JDialog {
+
+    private Usuario usuario;
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+
+        txtNome.setText(usuario.getNome());
+        txtTelefone.setText("" + usuario.getTelefone());
+        txtEmail.setText(usuario.getEmail());
+        txtCPF.setText(usuario.getCpf());
+        if (usuario.getCpf() == null || usuario.getCpf().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "CPF é obrigatório!");
+            return;
+        }
+
+        String endereco = usuario.getEndereco();
+        String[] partes = endereco.split(",");
+
+        if (partes.length >= 5) {
+            txtCEP.setText(partes[0].trim());
+            txtBairro.setText(partes[1].trim());
+            txtRua.setText(partes[2].trim());
+            txtNumero.setText(partes[3].trim());
+            txtComplemento.setText(partes[4].trim());
+        }
+
+    }
 
     /**
      * Creates new form CadastroUsuarioClienteJF
      */
-    public CadastroUsuarioClienteJF(java.awt.Frame parent, boolean modal) {
+    public CadastroUsuarioJF(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        usuario = new Usuario();
+    }
+
+    private Tipo tipoUsuario;
+
+    public void setTipoUsuario(Tipo tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     /**
@@ -47,7 +92,7 @@ public class CadastroUsuarioClienteJF extends javax.swing.JDialog {
         lblComplemento = new javax.swing.JLabel();
         lblSenha = new javax.swing.JLabel();
         pfSenha = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -77,11 +122,16 @@ public class CadastroUsuarioClienteJF extends javax.swing.JDialog {
 
         lblSenha.setText("Senha:");
 
-        jButton1.setBackground(new java.awt.Color(102, 204, 255));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("SALVAR");
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSalvar.setBackground(new java.awt.Color(102, 204, 255));
+        btnSalvar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSalvar.setForeground(new java.awt.Color(255, 255, 255));
+        btnSalvar.setText("SALVAR");
+        btnSalvar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -135,7 +185,7 @@ public class CadastroUsuarioClienteJF extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(lblComplemento)
@@ -181,7 +231,7 @@ public class CadastroUsuarioClienteJF extends javax.swing.JDialog {
                     .addComponent(lblSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pfSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
         );
 
@@ -191,6 +241,69 @@ public class CadastroUsuarioClienteJF extends javax.swing.JDialog {
     private void txtComplementoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtComplementoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtComplementoActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+
+        usuario = new Usuario();
+
+        if (!txtNome.getText().trim().isEmpty()) {
+            usuario.setNome(txtNome.getText());
+        }
+        if (!txtCPF.getText().trim().isEmpty()) {
+            usuario.setCpf(txtCPF.getText());
+        }
+        if (!txtTelefone.getText().trim().isEmpty()) {
+            usuario.setTelefone(txtTelefone.getText());
+        }
+        if (!txtEmail.getText().trim().isEmpty()) {
+            usuario.setEmail(txtEmail.getText());
+        }
+
+        if (pfSenha.getPassword().length > 0) {
+            String senha = new String(pfSenha.getPassword()).trim();
+            usuario.setSenha(senha);
+        }
+
+        usuario.setTipo(this.tipoUsuario);
+
+        String endereco = "";
+
+        if (!txtCEP.getText().trim().isEmpty()) {
+            endereco += txtCEP.getText().trim();
+        }
+        if (!txtBairro.getText().trim().isEmpty()) {
+            if (!endereco.isEmpty()) {
+                endereco += ", ";
+            }
+            endereco += txtBairro.getText().trim();
+        }
+        if (!txtRua.getText().trim().isEmpty()) {
+            if (!endereco.isEmpty()) {
+                endereco += ", ";
+            }
+            endereco += txtRua.getText().trim();
+
+        }
+        if (!txtNumero.getText().trim().isEmpty()) {
+            if (!endereco.isEmpty()) {
+                endereco += ", ";
+            }
+            endereco += txtNumero.getText().trim();
+
+        }
+
+        if (!txtComplemento.getText().trim().isEmpty()) {
+            if (!endereco.isEmpty()) {
+                endereco += ", ";
+            }
+            endereco += txtComplemento.getText().trim();
+
+        }
+
+        usuario.setEndereco(endereco);
+
+        dispose();
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,20 +322,21 @@ public class CadastroUsuarioClienteJF extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuarioClienteJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroUsuarioJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuarioClienteJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroUsuarioJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuarioClienteJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroUsuarioJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuarioClienteJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroUsuarioJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CadastroUsuarioClienteJF dialog = new CadastroUsuarioClienteJF(new javax.swing.JFrame(), true);
+                CadastroUsuarioJF dialog = new CadastroUsuarioJF(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -235,7 +349,7 @@ public class CadastroUsuarioClienteJF extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnSalvar;
     private javax.swing.JLabel lblBairro;
     private javax.swing.JLabel lblCEP;
     private javax.swing.JLabel lblCPF;

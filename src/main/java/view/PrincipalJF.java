@@ -4,11 +4,20 @@
  */
 package view;
 
+import control.PersistenciaJPA;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.Tipo;
+import model.Usuario;
+
 /**
  *
  * @author Usuário
  */
 public class PrincipalJF extends javax.swing.JFrame {
+
+    PersistenciaJPA jpa;
 
     /**
      * Creates new form LoginJF
@@ -81,8 +90,23 @@ public class PrincipalJF extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
-        CadastroUsuarioClienteJF telaLogin = new CadastroUsuarioClienteJF(this, true);
-        telaLogin.setVisible(true);
+        CadastroUsuarioJF telaCadastro = new CadastroUsuarioJF(this, true);
+        telaCadastro.setTipoUsuario(Tipo.CLIENTE);
+        telaCadastro.setVisible(true);
+        
+        Usuario novoUsuario= telaCadastro.getUsuario();
+        if(novoUsuario != null){
+            try {
+                if(jpa == null){
+                    jpa = new PersistenciaJPA();
+                }
+                jpa.persist(novoUsuario);
+            } catch (Exception ex) {
+                Logger.getLogger(PrincipalJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        
     }//GEN-LAST:event_btnSignUpActionPerformed
 
     /**

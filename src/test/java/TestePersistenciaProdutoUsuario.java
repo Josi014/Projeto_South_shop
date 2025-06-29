@@ -9,6 +9,7 @@ import model.Categoria;
 import model.Tipo;
 import control.PersistenciaJPA;
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class TestePersistenciaProdutoUsuario {
             produto.setDescricao("Notebook com Intel i7, 16GB RAM, SSD 512GB");
             produto.setPreco(4299.99);
             produto.setQuantidadeEstoque(10);
-            produto.setCategoria(Categoria.ELETRONICO); 
+            produto.setCategoria(Categoria.ELETRONICO);
 
             jpa.persist(produto);
 
@@ -49,7 +50,7 @@ public class TestePersistenciaProdutoUsuario {
             usuario.setTelefone("(11) 91234-5678");
             usuario.setEmail("maria@example.com");
             usuario.setSenha("senhaSegura123");
-            usuario.setTipo(Tipo.CLIENTE); 
+            usuario.setTipo(Tipo.CLIENTE);
 
             jpa.persist(usuario);
 
@@ -62,20 +63,15 @@ public class TestePersistenciaProdutoUsuario {
             System.out.println("Nenhum produto cadastrado.");
         } else {
             for (Produto p : listaProdutos) {
-                System.out.println(p.getNome() + " - R$" + p.getPreco() +
-                        " - Estoque: " + p.getQuantidadeEstoque() +
-                        " - Categoria: " + p.getCategoria());
+                System.out.println(p.getNome() + " - R$" + p.getPreco()
+                        + " - Estoque: " + p.getQuantidadeEstoque()
+                        + " - Categoria: " + p.getCategoria());
             }
         }
 
-        ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) jpa.getUsuarios();
-        if (listaUsuarios.isEmpty()) {
-            System.out.println("Nenhum usuário cadastrado.");
-        } else {
-            for (Usuario u : listaUsuarios) {
-                System.out.println(u.getNome() + " - Email: " + u.getEmail() +
-                        " - Tipo: " + u.getTipo());
-            }
+       ArrayList<Usuario> listaUsuarios = (ArrayList)jpa.getUsuarios();
+         if(listaUsuarios.isEmpty()){
+            System.out.println("Não há usuário cadastradas");
         }
     }
 }

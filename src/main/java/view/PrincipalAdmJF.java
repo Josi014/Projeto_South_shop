@@ -4,14 +4,22 @@
  */
 package view;
 
+import control.PersistenciaJPA;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Produto;
+import model.Tipo;
+import model.Usuario;
+
 /**
  *
  * @author Usuário
  */
 public class PrincipalAdmJF extends javax.swing.JFrame {
+    PersistenciaJPA jpa;
 
     /**
-     * Creates new form PrinciplaAdmJF
+     * Creates new form PrincipalAdmJF
      */
     public PrincipalAdmJF() {
         initComponents();
@@ -27,24 +35,43 @@ public class PrincipalAdmJF extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenuBar1 = new javax.swing.JMenuBar();
-        minCliente = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        minCliente = new javax.swing.JMenuItem();
+        minAdm = new javax.swing.JMenuItem();
         minProduto = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        minCliente.setText("Cadastrar");
+        jMenu1.setText("Cadastrar");
 
-        jMenuItem1.setText("Cliente");
-        minCliente.add(jMenuItem1);
+        minCliente.setText("Cliente");
+        minCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minClienteActionPerformed(evt);
+            }
+        });
+        jMenu1.add(minCliente);
+
+        minAdm.setText("Administrador");
+        minAdm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minAdmActionPerformed(evt);
+            }
+        });
+        jMenu1.add(minAdm);
 
         minProduto.setText("Produto");
-        minCliente.add(minProduto);
+        minProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minProdutoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(minProduto);
 
-        jMenuBar1.add(minCliente);
+        jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Ajuda");
+        jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -53,15 +80,68 @@ public class PrincipalAdmJF extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 618, Short.MAX_VALUE)
+            .addGap(0, 593, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 407, Short.MAX_VALUE)
+            .addGap(0, 335, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void minClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minClienteActionPerformed
+        CadastroUsuarioJF tela = new CadastroUsuarioJF(this, true);
+        tela.setTipoUsuario(Tipo.CLIENTE);
+        tela.setVisible(true);
+         Usuario novoUsuario= tela.getUsuario();
+        if(novoUsuario != null){
+            try {
+                if(jpa == null){
+                    jpa = new PersistenciaJPA();
+                }
+                jpa.persist(novoUsuario);
+            } catch (Exception ex) {
+                Logger.getLogger(PrincipalJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_minClienteActionPerformed
+
+    private void minAdmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minAdmActionPerformed
+        CadastroUsuarioJF tela = new CadastroUsuarioJF(this, true);
+        tela.setTipoUsuario(Tipo.ADM);
+        tela.setVisible(true);
+        
+        Usuario novoUsuario= tela.getUsuario();
+        if(novoUsuario != null){
+            try {
+                if(jpa == null){
+                    jpa = new PersistenciaJPA();
+                }
+                jpa.persist(novoUsuario);
+            } catch (Exception ex) {
+                Logger.getLogger(PrincipalJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_minAdmActionPerformed
+
+    private void minProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minProdutoActionPerformed
+        CadastroProdutoJD telaProduto = new CadastroProdutoJD(this, true);
+        telaProduto.setVisible(true);
+        
+         Produto novoProduto = telaProduto.getProduto();
+        if(novoProduto != null){
+            try {
+                if(jpa == null){
+                    jpa = new PersistenciaJPA();
+                }
+                jpa.persist(novoProduto);
+            } catch (Exception ex) {
+                Logger.getLogger(PrincipalJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_minProdutoActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -89,7 +169,6 @@ public class PrincipalAdmJF extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(PrincipalAdmJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -100,10 +179,11 @@ public class PrincipalAdmJF extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenu minCliente;
+    private javax.swing.JMenuItem minAdm;
+    private javax.swing.JMenuItem minCliente;
     private javax.swing.JMenuItem minProduto;
     // End of variables declaration//GEN-END:variables
 }
