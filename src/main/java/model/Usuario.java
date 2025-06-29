@@ -116,4 +116,9 @@ public class Usuario implements Serializable {
         this.tipo = tipo;
     }
 
+    @Override
+    public String toString() {
+        return  id + ", "+ nome + ", " + cpf + ", " + email + ", " + tipo;
+    }
+
 }

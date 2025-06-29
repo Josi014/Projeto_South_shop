@@ -105,4 +105,9 @@ public class Produto implements Serializable {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
+    @Override
+    public String toString() {
+        return id + ", " + nome + ", " + categoria + ", " + codigo + ", " + quantidadeEstoque;
+    }
+
 }
