@@ -22,7 +22,6 @@ public class UsuariosJF extends javax.swing.JFrame {
     public UsuariosJF(Usuario usuarioLogado) {
         initComponents();
         this.usuarioLogado = usuarioLogado;
-        System.out.println("Usuário logado ID: " + (usuarioLogado != null ? usuarioLogado.getId() : "null"));
         jpa = new PersistenciaJPA();
         loadUsuarios(usuarioLogado);
     }
@@ -49,7 +48,6 @@ public class UsuariosJF extends javax.swing.JFrame {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -156,7 +154,7 @@ public class UsuariosJF extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEditarActionPerformed
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {
         Usuario usuarioSel = lstUsuarios.getSelectedValue();
         if (usuarioSel == null) {
             JOptionPane.showMessageDialog(null, "Selecione um usuário para editar");
@@ -164,7 +162,6 @@ public class UsuariosJF extends javax.swing.JFrame {
 
             CadastroUsuarioJD telaCadastro = new CadastroUsuarioJD(this, true);
             telaCadastro.setUsuario(usuarioSel);
-            telaCadastro.setVisible(true);
             telaCadastro.ocultarCampoSenha();
             telaCadastro.setVisible(true);
 
@@ -179,9 +176,9 @@ public class UsuariosJF extends javax.swing.JFrame {
             loadUsuarios();
         }
 
-    }// GEN-LAST:event_btnEditarActionPerformed
+    }
 
-    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRemoverActionPerformed
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {
         Usuario usuarioSel = lstUsuarios.getSelectedValue();
         if (usuarioSel == null) {
             JOptionPane.showMessageDialog(null, "Selecione um usuário para remover");
@@ -193,7 +190,7 @@ public class UsuariosJF extends javax.swing.JFrame {
                     jpa = new PersistenciaJPA();
                 }
                 try {
-                    jpa.remover(usuarioSel);
+                    jpa.removerUsuarioComDependencias(usuarioSel);
                     JOptionPane.showMessageDialog(null,
                             "Usuário removida com sucesso");
                 } catch (Exception ex) {
@@ -202,9 +199,9 @@ public class UsuariosJF extends javax.swing.JFrame {
                 loadUsuarios();
             }
         }
-    }// GEN-LAST:event_btnRemoverActionPerformed
+    }
 
-    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnNovoActionPerformed
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {
         String[] opcoes = {"Cliente", "Admin"};
         int escolha = JOptionPane.showOptionDialog(
                 null,
@@ -243,11 +240,11 @@ public class UsuariosJF extends javax.swing.JFrame {
             }
         }
         loadUsuarios();
-    }// GEN-LAST:event_btnNovoActionPerformed
+    }
 
-    private void lstUsuariosAncestorAdded(javax.swing.event.AncestorEvent evt) {// GEN-FIRST:event_lstUsuariosAncestorAdded
+    private void lstUsuariosAncestorAdded(javax.swing.event.AncestorEvent evt) {
 
-    }// GEN-LAST:event_lstUsuariosAncestorAdded
+    }
 
     /**
      * @param args the command line arguments
@@ -266,11 +263,6 @@ public class UsuariosJF extends javax.swing.JFrame {
                     ex);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UsuariosJF().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

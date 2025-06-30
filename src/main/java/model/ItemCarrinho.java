@@ -65,4 +65,9 @@ public class ItemCarrinho implements Serializable {
         this.carrinho = carrinho;
     }
 
+    @Override
+    public String toString() {
+        return  produto + ", " + quantidade;
+    }
+
 }

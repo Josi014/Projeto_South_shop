@@ -36,9 +36,51 @@ public class PersistenciaJPA implements InterfaceBD {
         }
     }
 
+    public void beginTransaction() {
+        if (entity == null || !entity.isOpen()) {
+            entity = factory.createEntityManager();
+        }
+        entity.getTransaction().begin();
+    }
+
+    public void commitTransaction() {
+        if (entity != null && entity.isOpen() && entity.getTransaction().isActive()) {
+            entity.getTransaction().commit();
+        }
+    }
+
+    public void rollbackTransaction() {
+        if (entity != null && entity.isOpen() && entity.getTransaction().isActive()) {
+            entity.getTransaction().rollback();
+        }
+    }
+
+    public EntityTransaction getTransaction() {
+        return getEntityManager().getTransaction();
+    }
+
     @Override
     public Object find(Class c, Object id) throws Exception {
         return getEntityManager().find(c, id);
+    }
+
+    public Object merge(Object o) throws Exception {
+        entity = getEntityManager();
+        try {
+            if (!entity.getTransaction().isActive()) {
+                entity.getTransaction().begin();
+            }
+            Object merged = entity.merge(o);
+            entity.getTransaction().commit();
+            return merged;
+        } catch (Exception e) {
+            if (entity.getTransaction().isActive()) {
+                entity.getTransaction().rollback();
+            }
+            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE,
+                    "Erro ao fazer merge de: " + o.getClass().getSimpleName(), e);
+            throw e;
+        }
     }
 
     @Override
@@ -123,6 +165,19 @@ public class PersistenciaJPA implements InterfaceBD {
         }
     }
 
+    public List<ItemCarrinho> getItensDoCarrinhoPorId(Long carrinhoId) {
+        entity = getEntityManager();
+        try {
+            TypedQuery<ItemCarrinho> query = entity.createQuery(
+                    "SELECT ic FROM ItemCarrinho ic WHERE ic.carrinho.id = :carrinhoId", ItemCarrinho.class);
+            query.setParameter("carrinhoId", carrinhoId);
+            return query.getResultList();
+        } catch (Exception e) {
+            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE, "Erro ao buscar itens do carrinho", e);
+            return new ArrayList<>();
+        }
+    }
+
     public Usuario buscarUsuarioPorEmailESenha(String email, String senha) {
         EntityManager em = getEntityManager();
         TypedQuery<Usuario> query = em.createQuery(
@@ -152,7 +207,10 @@ public class PersistenciaJPA implements InterfaceBD {
     public void removerProdutoComItens(Produto produto) throws Exception {
         entity = getEntityManager();
         try {
-            entity.getTransaction().begin();
+            EntityTransaction tx = entity.getTransaction();
+            if (!tx.isActive()) {
+                tx.begin();
+            }
 
             entity.createQuery("DELETE FROM ItemCarrinho ic WHERE ic.produto = :produto")
                     .setParameter("produto", produto)
@@ -163,7 +221,9 @@ public class PersistenciaJPA implements InterfaceBD {
             }
             entity.remove(produto);
 
-            entity.getTransaction().commit();
+            if (tx.isActive()) {
+                tx.commit();
+            }
         } catch (Exception e) {
             if (entity.getTransaction().isActive()) {
                 entity.getTransaction().rollback();

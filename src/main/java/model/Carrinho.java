@@ -30,7 +30,7 @@ public class Carrinho implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
-    private int id;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "cart_user_id", nullable = false)
@@ -43,11 +43,11 @@ public class Carrinho implements Serializable {
     public Carrinho() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -67,19 +67,22 @@ public class Carrinho implements Serializable {
         this.itens = itens;
     }
     
-    public void adicionarProduto(Produto produto, int quantidade){       
-       for(ItemCarrinho item : itens){
-           if(item.getProduto().equals(produto)){
-               item.setQuantidade(item.getQuantidade() + quantidade);
-               return;
-           }
-       }
-       
-       ItemCarrinho novoItem = new ItemCarrinho();
-       novoItem.setProduto(produto);
-       novoItem.setQuantidade(quantidade);
-       novoItem.setCarrinho(this);
-        
-       itens.add(novoItem);
+  public void adicionarProduto(Produto produto, int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
+        }
+
+        for (ItemCarrinho item : itens) {
+            if (item.getProduto().getId() == produto.getId()) {
+                item.setQuantidade(item.getQuantidade() + quantidade);
+                return;
+            }
+        }
+
+        ItemCarrinho novoItem = new ItemCarrinho();
+        novoItem.setProduto(produto);
+        novoItem.setQuantidade(quantidade);
+        novoItem.setCarrinho(this);
+        itens.add(novoItem);
     }
 }

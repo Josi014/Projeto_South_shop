@@ -58,6 +58,19 @@ public class Pedido implements Serializable {
     public Pedido() {
     }
 
+    public void calcularTotal() {
+        if (itens == null || itens.isEmpty()) {
+            this.total = 0.0;
+            return;
+        }
+
+        double soma = 0.0;
+        for (ItemPedido item : itens) {
+            soma += item.getQuantidade() * item.getPrecoUnitario();
+        }
+        this.total = soma;
+    }
+
     public int getId() {
         return id;
     }
@@ -96,6 +109,7 @@ public class Pedido implements Serializable {
 
     public void setItens(List<ItemPedido> itens) {
         this.itens = itens;
+        calcularTotal();
     }
 
     public double getTotal() {
