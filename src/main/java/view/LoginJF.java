@@ -102,7 +102,9 @@ public class LoginJF extends javax.swing.JFrame {
 
         if (usuario != null) {
             if (usuario.getTipo() == Tipo.ADM) {
-                new PrincipalAdmJF().setVisible(true);
+                PrincipalAdmJF principal = new PrincipalAdmJF();
+                principal.setUsuarioLogado(usuario);
+                principal.setVisible(true);
             } else if (usuario.getTipo() == Tipo.CLIENTE) {
                 usuario = jpa.buscarUsuarioPorEmailESenha(email, senha);
                 new PrincipalClienteJF(usuario).setVisible(true);

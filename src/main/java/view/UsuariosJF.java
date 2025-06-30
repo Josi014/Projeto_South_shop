@@ -17,25 +17,39 @@ import model.Usuario;
 public class UsuariosJF extends javax.swing.JFrame {
 
     PersistenciaJPA jpa;
+    Usuario usuarioLogado;
+
+    public UsuariosJF(Usuario usuarioLogado) {
+        initComponents();
+        this.usuarioLogado = usuarioLogado;
+        System.out.println("Usuário logado ID: " + (usuarioLogado != null ? usuarioLogado.getId() : "null"));
+        jpa = new PersistenciaJPA();
+        loadUsuarios(usuarioLogado);
+    }
 
     public UsuariosJF() {
-        initComponents();
-        jpa = new PersistenciaJPA();
-        loadUsuarios();
+        this(null);
     }
 
     public void loadUsuarios() {
-        DefaultListModel model = new DefaultListModel();
+        loadUsuarios(this.usuarioLogado);
+    }
+
+    public void loadUsuarios(Usuario usuarioLogado) {
+        DefaultListModel<Usuario> model = new DefaultListModel<>();
         model.removeAllElements();
 
         for (Usuario u : jpa.getUsuarios()) {
-            model.addElement(u);
+            if (usuarioLogado == null || u.getId() != usuarioLogado.getId()) {
+                model.addElement(u);
+            }
         }
 
         lstUsuarios.setModel(model);
     }
 
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -142,7 +156,7 @@ public class UsuariosJF extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEditarActionPerformed
         Usuario usuarioSel = lstUsuarios.getSelectedValue();
         if (usuarioSel == null) {
             JOptionPane.showMessageDialog(null, "Selecione um usuário para editar");
@@ -150,6 +164,7 @@ public class UsuariosJF extends javax.swing.JFrame {
 
             CadastroUsuarioJD telaCadastro = new CadastroUsuarioJD(this, true);
             telaCadastro.setUsuario(usuarioSel);
+            telaCadastro.setVisible(true);
             telaCadastro.ocultarCampoSenha();
             telaCadastro.setVisible(true);
 
@@ -164,9 +179,9 @@ public class UsuariosJF extends javax.swing.JFrame {
             loadUsuarios();
         }
 
-    }
+    }// GEN-LAST:event_btnEditarActionPerformed
 
-    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRemoverActionPerformed
         Usuario usuarioSel = lstUsuarios.getSelectedValue();
         if (usuarioSel == null) {
             JOptionPane.showMessageDialog(null, "Selecione um usuário para remover");
@@ -178,18 +193,18 @@ public class UsuariosJF extends javax.swing.JFrame {
                     jpa = new PersistenciaJPA();
                 }
                 try {
-                    jpa.removerUsuarioComDependencias(usuarioSel);
+                    jpa.remover(usuarioSel);
                     JOptionPane.showMessageDialog(null,
-                            "Usuário removido com sucesso");
+                            "Usuário removida com sucesso");
                 } catch (Exception ex) {
                     System.err.println("ERRO AO REMOVER USUÁRIO: " + ex);
                 }
                 loadUsuarios();
             }
         }
-    }
+    }// GEN-LAST:event_btnRemoverActionPerformed
 
-    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnNovoActionPerformed
         String[] opcoes = {"Cliente", "Admin"};
         int escolha = JOptionPane.showOptionDialog(
                 null,
@@ -228,11 +243,11 @@ public class UsuariosJF extends javax.swing.JFrame {
             }
         }
         loadUsuarios();
-    }
+    }// GEN-LAST:event_btnNovoActionPerformed
 
-    private void lstUsuariosAncestorAdded(javax.swing.event.AncestorEvent evt) {
+    private void lstUsuariosAncestorAdded(javax.swing.event.AncestorEvent evt) {// GEN-FIRST:event_lstUsuariosAncestorAdded
 
-    }
+    }// GEN-LAST:event_lstUsuariosAncestorAdded
 
     /**
      * @param args the command line arguments
@@ -250,6 +265,7 @@ public class UsuariosJF extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(UsuariosJF.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
         }
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new UsuariosJF().setVisible(true);

@@ -5,6 +5,7 @@
 package view;
 
 import control.PersistenciaJPA;
+import model.Usuario;
 
 /**
  *
@@ -13,6 +14,11 @@ import control.PersistenciaJPA;
 public class PrincipalAdmJF extends javax.swing.JFrame {
 
     PersistenciaJPA jpa;
+    private Usuario usuarioLogado;
+
+    public void setUsuarioLogado(Usuario usuario) {
+        this.usuarioLogado = usuario;
+    }
 
     public PrincipalAdmJF() {
         initComponents();
@@ -75,7 +81,7 @@ public class PrincipalAdmJF extends javax.swing.JFrame {
     }//GEN-LAST:event_minProdutoActionPerformed
 
     private void minUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minUsuarioActionPerformed
-        UsuariosJF telaUsuarios = new UsuariosJF();
+        UsuariosJF telaUsuarios = new UsuariosJF(this.usuarioLogado);
         telaUsuarios.setVisible(true);
     }//GEN-LAST:event_minUsuarioActionPerformed
 
@@ -95,11 +101,7 @@ public class PrincipalAdmJF extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(UsuariosJF.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
         }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PrincipalAdmJF().setVisible(true);
-            }
-        });
+ 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
