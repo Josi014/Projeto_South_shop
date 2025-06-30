@@ -6,7 +6,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/db_south_shop"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.password" value="6714J0sIJ"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
             
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.show_sql" value="true"/>
