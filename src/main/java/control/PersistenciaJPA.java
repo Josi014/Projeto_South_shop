@@ -111,13 +111,31 @@ public class PersistenciaJPA implements InterfaceBD {
         }
     }
 
+    public List<Pedido> getPedidos() {
+        entity = getEntityManager();
+        try {
+            TypedQuery<Pedido> query = entity.createQuery("SELECT o FROM Pedido o", Pedido.class);
+            List<Pedido> lista = query.getResultList();
+            return (lista != null) ? lista : new ArrayList<>();
+        } catch (Exception e) {
+            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE, "Erro ao buscar pedidos", e);
+            return new ArrayList<>();
+        }
+    }
+
     public Usuario buscarUsuarioPorEmailESenha(String email, String senha) {
         EntityManager em = getEntityManager();
         TypedQuery<Usuario> query = em.createQuery(
                 "SELECT u FROM Usuario u WHERE u.email = :email AND u.senha = :senha", Usuario.class);
         query.setParameter("email", email);
         query.setParameter("senha", senha);
-        return query.getSingleResult();
+
+        List<Usuario> usuarios = query.getResultList();
+        if (usuarios.isEmpty()) {
+            return null;
+        } else {
+            return usuarios.get(0);
+        }
     }
 
     public Carrinho buscarCarrinhoPorUsuario(Usuario usuario) {
@@ -128,6 +146,73 @@ public class PersistenciaJPA implements InterfaceBD {
                     .getSingleResult();
         } catch (NoResultException e) {
             return null;
+        }
+    }
+
+    public void removerProdutoComItens(Produto produto) throws Exception {
+        entity = getEntityManager();
+        try {
+            entity.getTransaction().begin();
+
+            entity.createQuery("DELETE FROM ItemCarrinho ic WHERE ic.produto = :produto")
+                    .setParameter("produto", produto)
+                    .executeUpdate();
+
+            if (!entity.contains(produto)) {
+                produto = entity.merge(produto);
+            }
+            entity.remove(produto);
+
+            entity.getTransaction().commit();
+        } catch (Exception e) {
+            if (entity.getTransaction().isActive()) {
+                entity.getTransaction().rollback();
+            }
+            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE,
+                    "Erro ao remover produto com itens", e);
+            throw e;
+        }
+    }
+
+    public void removerUsuarioComDependencias(Usuario usuario) throws Exception {
+        entity = getEntityManager();
+        try {
+            entity.getTransaction().begin();
+
+            List<Carrinho> carrinhos = entity.createQuery(
+                    "SELECT c FROM Carrinho c WHERE c.usuario = :usuario", Carrinho.class)
+                    .setParameter("usuario", usuario)
+                    .getResultList();
+
+            for (Carrinho carrinho : carrinhos) {
+                entity.createQuery("DELETE FROM ItemCarrinho ic WHERE ic.carrinho = :carrinho")
+                        .setParameter("carrinho", carrinho)
+                        .executeUpdate();
+
+                if (!entity.contains(carrinho)) {
+                    carrinho = entity.merge(carrinho);
+                }
+                entity.remove(carrinho);
+            }
+
+            entity.createQuery("DELETE FROM Pedido p WHERE p.usuario = :usuario")
+                    .setParameter("usuario", usuario)
+                    .executeUpdate();
+
+            if (!entity.contains(usuario)) {
+                usuario = entity.merge(usuario);
+            }
+            entity.remove(usuario);
+
+            entity.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (entity.getTransaction().isActive()) {
+                entity.getTransaction().rollback();
+            }
+            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE,
+                    "Erro ao remover usuário com dependências", e);
+            throw e;
         }
     }
 

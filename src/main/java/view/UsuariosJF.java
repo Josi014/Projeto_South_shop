@@ -150,7 +150,6 @@ public class UsuariosJF extends javax.swing.JFrame {
 
             CadastroUsuarioJD telaCadastro = new CadastroUsuarioJD(this, true);
             telaCadastro.setUsuario(usuarioSel);
-            telaCadastro.setVisible(true);
             telaCadastro.ocultarCampoSenha();
             telaCadastro.setVisible(true);
 
@@ -179,7 +178,7 @@ public class UsuariosJF extends javax.swing.JFrame {
                     jpa = new PersistenciaJPA();
                 }
                 try {
-                    jpa.remover(usuarioSel);
+                    jpa.removerUsuarioComDependencias(usuarioSel);
                     JOptionPane.showMessageDialog(null,
                             "Usuário removido com sucesso");
                 } catch (Exception ex) {
@@ -191,7 +190,7 @@ public class UsuariosJF extends javax.swing.JFrame {
     }
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {
-        String[] opcoes = { "Cliente", "Admin" };
+        String[] opcoes = {"Cliente", "Admin"};
         int escolha = JOptionPane.showOptionDialog(
                 null,
                 "Escolha o tipo de usuário:",
