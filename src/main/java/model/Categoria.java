@@ -9,5 +9,5 @@ package model;
  * @author Josieli
  */
 public enum Categoria {
-    ELETRONICOS, VESTUARIO, ALIMENTOS, LIVROS, ELETRONICO
+    ELETRONICOS, VESTUARIO, LIVROS,ALIMENTOS
 }

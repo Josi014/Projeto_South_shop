@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,10 +18,9 @@ import javax.persistence.Table;
  *
  * @author Josieli
  */
-
 @Entity
 @Table(name = "cart_item")
-public class ItemCarrinho {
+public class ItemCarrinho implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,10 @@ public class ItemCarrinho {
     @ManyToOne
     @JoinColumn(name = "item_product_id")
     private Produto produto;
+
+    @ManyToOne
+    @JoinColumn(name = "item_carrinho_id")
+    private Carrinho carrinho;
 
     @Column(name = "item_quantity", nullable = false)
     private int quantidade;
@@ -51,6 +55,14 @@ public class ItemCarrinho {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+    
+      public Carrinho getCarrinho() {
+        return carrinho;
+    }
+
+    public void setCarrinho(Carrinho carrinho) {
+        this.carrinho = carrinho;
     }
 
 }

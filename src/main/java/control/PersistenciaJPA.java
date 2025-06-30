@@ -55,7 +55,8 @@ public class PersistenciaJPA implements InterfaceBD {
             if (entity.getTransaction().isActive()) {
                 entity.getTransaction().rollback();
             }
-            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE, "Erro ao persistir: " + o.getClass().getSimpleName(), e);
+            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE,
+                    "Erro ao persistir: " + o.getClass().getSimpleName(), e);
             throw e;
         }
     }
@@ -74,7 +75,8 @@ public class PersistenciaJPA implements InterfaceBD {
             if (entity.getTransaction().isActive()) {
                 entity.getTransaction().rollback();
             }
-            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE, "Erro ao remover: " + o.getClass().getSimpleName(), e);
+            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE,
+                    "Erro ao remover: " + o.getClass().getSimpleName(), e);
             throw e;
         }
     }
@@ -109,18 +111,6 @@ public class PersistenciaJPA implements InterfaceBD {
         }
     }
 
-    public List<Pedido> getPedidos() {
-        entity = getEntityManager();
-        try {
-            TypedQuery<Pedido> query = entity.createQuery("SELECT o FROM Pedido o", Pedido.class);
-            List<Pedido> lista = query.getResultList();
-            return (lista != null) ? lista : new ArrayList<>();
-        } catch (Exception e) {
-            Logger.getLogger(PersistenciaJPA.class.getName()).log(Level.SEVERE, "Erro ao buscar pedidos", e);
-            return new ArrayList<>();
-        }
-    }
-
     public Usuario buscarUsuarioPorEmailESenha(String email, String senha) {
         EntityManager em = getEntityManager();
         TypedQuery<Usuario> query = em.createQuery(
@@ -128,6 +118,17 @@ public class PersistenciaJPA implements InterfaceBD {
         query.setParameter("email", email);
         query.setParameter("senha", senha);
         return query.getSingleResult();
+    }
+
+    public Carrinho buscarCarrinhoPorUsuario(Usuario usuario) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT c FROM Carrinho c WHERE c.usuario = :usuario", Carrinho.class)
+                    .setParameter("usuario", usuario)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
 }

@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -25,7 +26,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "orders")
-public class Pedido {
+public class Pedido implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,6 +5,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,7 +25,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "cart")
-public class Carrinho {
+public class Carrinho implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +36,9 @@ public class Carrinho {
     @JoinColumn(name = "cart_user_id", nullable = false)
     private Usuario usuario;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "item_cart_id_fk") 
-    private List<ItemCarrinho> itens;
+    private List<ItemCarrinho> itens = new ArrayList<>();
 
     public Carrinho() {
     }
@@ -66,5 +67,19 @@ public class Carrinho {
         this.itens = itens;
     }
     
-    
+    public void adicionarProduto(Produto produto, int quantidade){       
+       for(ItemCarrinho item : itens){
+           if(item.getProduto().equals(produto)){
+               item.setQuantidade(item.getQuantidade() + quantidade);
+               return;
+           }
+       }
+       
+       ItemCarrinho novoItem = new ItemCarrinho();
+       novoItem.setProduto(produto);
+       novoItem.setQuantidade(quantidade);
+       novoItem.setCarrinho(this);
+        
+       itens.add(novoItem);
+    }
 }

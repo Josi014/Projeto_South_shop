@@ -36,7 +36,6 @@ public class UsuariosJF extends javax.swing.JFrame {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -143,7 +142,7 @@ public class UsuariosJF extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEditarActionPerformed
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {
         Usuario usuarioSel = lstUsuarios.getSelectedValue();
         if (usuarioSel == null) {
             JOptionPane.showMessageDialog(null, "Selecione um usuário para editar");
@@ -166,9 +165,9 @@ public class UsuariosJF extends javax.swing.JFrame {
             loadUsuarios();
         }
 
-    }// GEN-LAST:event_btnEditarActionPerformed
+    }
 
-    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRemoverActionPerformed
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {
         Usuario usuarioSel = lstUsuarios.getSelectedValue();
         if (usuarioSel == null) {
             JOptionPane.showMessageDialog(null, "Selecione um usuário para remover");
@@ -182,16 +181,16 @@ public class UsuariosJF extends javax.swing.JFrame {
                 try {
                     jpa.remover(usuarioSel);
                     JOptionPane.showMessageDialog(null,
-                            "Usuário removida com sucesso");
+                            "Usuário removido com sucesso");
                 } catch (Exception ex) {
                     System.err.println("ERRO AO REMOVER USUÁRIO: " + ex);
                 }
                 loadUsuarios();
             }
         }
-    }// GEN-LAST:event_btnRemoverActionPerformed
+    }
 
-    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnNovoActionPerformed
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {
         String[] opcoes = { "Cliente", "Admin" };
         int escolha = JOptionPane.showOptionDialog(
                 null,
@@ -230,11 +229,11 @@ public class UsuariosJF extends javax.swing.JFrame {
             }
         }
         loadUsuarios();
-    }// GEN-LAST:event_btnNovoActionPerformed
+    }
 
-    private void lstUsuariosAncestorAdded(javax.swing.event.AncestorEvent evt) {// GEN-FIRST:event_lstUsuariosAncestorAdded
+    private void lstUsuariosAncestorAdded(javax.swing.event.AncestorEvent evt) {
 
-    }// GEN-LAST:event_lstUsuariosAncestorAdded
+    }
 
     /**
      * @param args the command line arguments

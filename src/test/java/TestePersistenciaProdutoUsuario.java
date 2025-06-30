@@ -39,7 +39,7 @@ public class TestePersistenciaProdutoUsuario {
             produto.setDescricao("Notebook com Intel i7, 16GB RAM, SSD 512GB");
             produto.setPreco(4299.99);
             produto.setQuantidadeEstoque(10);
-            produto.setCategoria(Categoria.ELETRONICO);
+            produto.setCategoria(Categoria.ELETRONICOS);
 
             jpa.persist(produto);
 

@@ -104,7 +104,8 @@ public class LoginJF extends javax.swing.JFrame {
             if (usuario.getTipo() == Tipo.ADM) {
                 new PrincipalAdmJF().setVisible(true);
             } else if (usuario.getTipo() == Tipo.CLIENTE) {
-                new PrincipalClienteJF().setVisible(true);
+                usuario = jpa.buscarUsuarioPorEmailESenha(email, senha);
+                new PrincipalClienteJF(usuario).setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Tipo de usuário inválido.");
             }
