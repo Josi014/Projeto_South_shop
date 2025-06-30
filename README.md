@@ -1,2 +1,2 @@
 "# South_shop" 
-![Diagrama do Projeto](/src/main/java/images/DiagramaSouthShop.png)
+![Diagrama do Projeto](src/main/java/images/DiagramaSouthShop.drawio.png)
